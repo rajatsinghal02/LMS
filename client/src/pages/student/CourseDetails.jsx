@@ -32,7 +32,7 @@ const CourseDetails = () => {
 
       }
     ))
-    }
+    };
 
 
 
@@ -63,6 +63,7 @@ const CourseDetails = () => {
   
      <div className='pt-9 text-gray-800'>
       <h2 className='text-xl font-semibold'>Course Structure</h2>
+
       <div className='pt-5'>
          {courseData.courseContent.map((chapter,index)=>(
           <div key={index} className='border border-gray-300 bg-white mb-2 rounded'>
@@ -97,6 +98,8 @@ const CourseDetails = () => {
           </div>
          ))}
       </div>
+
+
      </div>
       
       <div className='py-20 text-sm md:text-default'>

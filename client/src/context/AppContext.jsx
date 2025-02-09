@@ -11,6 +11,7 @@ const navigate = useNavigate()
 
 const [allCourses, setAllCourses] = useState([])
 const [isEducator, setIsEducator] = useState(true)
+const [enrolledCourses, setEnrolledCourses] = useState([])
 
 //Fetch All Courses
 
@@ -60,8 +61,18 @@ const calculateNoOfLectures =(course)=>{
    return totalLectures
 }
 
+
+  // Fetch user enrolled courses
+
+   const fetchUserEnrolledCourses = async()=>{
+    setEnrolledCourses(dummyCourses)
+   }
+
+
+
 useEffect(()=>{
    fetchAllCourses()
+   fetchUserEnrolledCourses()
 },[])
 
 const value={
@@ -73,7 +84,9 @@ const value={
     setIsEducator, 
     calculateChapterTime,
     calculateCourseDuration,
-    calculateNoOfLectures
+    calculateNoOfLectures,
+    enrolledCourses,
+    fetchUserEnrolledCourses
 }
 
 return (
