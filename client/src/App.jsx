@@ -12,6 +12,7 @@ import AddCourse from './pages/educator/AddCourse'
 import MyCourses from './pages/educator/MyCourses'
 import StudentEnrolled from './pages/educator/StudentsEnrolled'
 import Navbar from './components/student/navbar'
+import Banner from './components/student/Banner'
 
 const App = () => {
 
@@ -20,7 +21,7 @@ const isEducatorRoute = useMatch('/educator/*')
 
   return (
     <div className='text-default min-h-screen bg-white'>
-      {!isEducatorRoute &&  <Navbar />}
+      {!isEducatorRoute &&  <><Banner/> <Navbar /> </>}
      
      <Routes>
       <Route path='/' element={<Home/>} />
