@@ -6,6 +6,8 @@ import humanizeDuration from 'humanize-duration'
 import YouTube from 'react-youtube'
 import Footer from '../../components/student/Footer'
 import Rating from '../../components/student/Rating'
+import Plyr from 'plyr-react';
+import 'plyr-react/plyr.css';
 
 const Player = () => {
 
@@ -38,6 +40,10 @@ const Player = () => {
   getCourseData()
  },[enrolledCourses])
 
+ const extractYouTubeID = (url) => {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|.*\/|.*vi=))([\w-]{11})/);
+  return match ? match[1] : null;
+};
 
   return (
     <>
@@ -94,7 +100,16 @@ const Player = () => {
 {
   playerData ? (
     <div>
-       <YouTube   videoId={playerData.lectureUrl.split('/').pop()} iframeClassName='w-full aspect-video' />
+       {/* <YouTube   videoId={playerData.lectureUrl.split('/').pop()} iframeClassName='w-full aspect-video' /> */}
+
+       <Plyr 
+        source={{
+          type: 'video',
+          sources: [{ src: playerData.lectureUrl, provider: 'youtube' }]
+        }} 
+        options={{ autoplay: true }} 
+      />
+       
        <div className='flex justify-between items-center mt-2'>
         <p>{playerData.chapter}.{playerData.lecture} {playerData.lectureTitle}</p>
         <button className='text-blue-600'>{false ? 'Completed' : 'Mark Complete'}</button>

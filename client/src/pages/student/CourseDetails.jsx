@@ -1,11 +1,15 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
 import {useParams} from 'react-router-dom'
 import {AppContext} from '../../context/AppContext'
 import Loading from '../../components/student/Loading'
 import Footer from '../../components/student/Footer'
+import SparkleEffect from '../../components/student/SparkleEffect'
 import { assets } from '../../assets/assets'
 import humanizeDuration from 'humanize-duration'
 import YouTube from 'react-youtube'
+import Plyr from 'plyr-react';
+import 'plyr-react/plyr.css';
+
 const CourseDetails = () => {
    const {id} = useParams();
    
@@ -34,11 +38,20 @@ const CourseDetails = () => {
     ))
     };
 
-
-
+    const extractYouTubeID = (url) => {
+      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|.*\/|.*vi=))([\w-]{11})/);
+      return match ? match[1] : null;
+  };
+  const [trigger, setTrigger] = useState(false);
+  const handleButtonClick = () => {
+    setTrigger(true);
+    setTimeout(() => setTrigger(false), 500); // Reset trigger
+  };
+ 
 
   return courseData ? (
     <>
+    <SparkleEffect trigger={trigger} />
     <div className='flex md:flex-row flex-col-reverse gap-10 relative items-start justify-between md:px-36 px-8 md:pt-30 pt-20 text-left'>
      <div className='absolute top-0 left-0 w-full h-section-height -z-1 bg-gradient-to-b from-cyan-100/70'></div>
       {/* left column */}
@@ -83,9 +96,10 @@ const CourseDetails = () => {
                     <div className='flex items-center justify-between w-full text-gray-800 text-xs md:text-default'>
                       <p>{lecture.lectureTitle}</p>
                       <div className='flex gap-2'>
-                        {lecture.isPreviewFree && <p className='text-blue-500 cursor-pointer' onClick={()=>setPlayerData({
-                          videoId: lecture.lectureUrl.split('/').pop()
-                          })}>Preview</p>}
+                        {lecture.isPreviewFree && <p className='text-blue-500 cursor-pointer' onClick={() => setPlayerData({
+    videoId: extractYouTubeID(lecture.lectureUrl)
+})}>Preview</p>
+}
                         <p>{humanizeDuration(lecture.lectureDuration *60 * 1000, {units:['h','m']})}</p>
                       </div>
                     </div>
@@ -117,13 +131,25 @@ const CourseDetails = () => {
       {/* Right column */}
 <div className='max-w-course-card z-10 shadow-custom-card rounded-t md:rounded-none overflow-hidden bg-white min-w[300px] sm:min-w-[420px]'>
 
-{
+{/* {
   playerData ? 
       <YouTube   videoId={playerData.videoId} opts={{playerVars: {autoplay:1}}} iframeClassName='w-full aspect-video' />
   :
   <img src={courseData.courseThumbnail} alt="course_image" />
-}
+} */}
 
+{
+  playerData ? 
+      <Plyr 
+        source={{
+          type: 'video',
+          sources: [{ src: playerData.videoId, provider: 'youtube' }]
+        }} 
+        options={{ autoplay: true }} 
+      />
+  :
+  <img src={courseData.courseThumbnail} alt="course_image" />
+}
 
 
 
@@ -164,7 +190,7 @@ const CourseDetails = () => {
      </div>
       </div>
 
-      <button className='md:mt-6 mt-4 w-full py-3 rounded bg-blue-600 text-white font-medium'>{isAlreadyEnrolled ? 'Already Enrolled':'Enroll Now'}</button>
+      <button className='md:mt-6 mt-4 w-full py-3 rounded bg-blue-600 text-white font-medium' onClick={handleButtonClick}>{isAlreadyEnrolled ? 'Already Enrolled':'Enroll Now'}</button>
 
       <div className='pt-6'>
         <p className='md:text-xl text-lg font-medium text-gray-800'>What's in the course?</p>
